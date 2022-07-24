@@ -2,26 +2,42 @@ import { FormEvent, useState } from "react";
 import { classNames } from "./lib/classNames";
 
 export default function App() {
-	const [disqualifyState, setDisqualifyState] = useState<"idle" | "submitting">(
-		"idle",
-	);
-	// here everything is mixed up, form submission and business logic belongs to the same function
+	const [disqualifyState, setDisqualifyState] = useState<{
+		status: "idle" | "submitting";
+		context?: { errorReason: string };
+	}>({
+		status: "idle",
+	});
+
+	// here everything is mixed up: form submission and business logic belongs to the same function
 	function handleDisqualify(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
-		setDisqualifyState("submitting");
+		// defensive programming, not ideal
+		if (disqualifyState.status === "submitting") {
+			return;
+		}
+
+		setDisqualifyState({
+			status: "submitting",
+		});
 
 		// fake business logic
-		return new Promise((resolve) => {
+		return new Promise((_resolve, reject) => {
 			setTimeout(() => {
-				setDisqualifyState("idle");
-				console.log("disqualified");
-				resolve("Success");
+				setDisqualifyState({
+					status: "idle",
+					context: {
+						errorReason:
+							"Could not disqualify applicant. Please try again later.",
+					},
+				});
+				reject("Could not disqualify applicant");
 			}, 2000);
 		});
 	}
 
-	const isDisqualifying = disqualifyState === "submitting";
+	const isDisqualifying = disqualifyState.status === "submitting";
 
 	return (
 		<main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:px-8">
@@ -54,6 +70,11 @@ export default function App() {
 					</p>
 				</div>
 			</div>
+			{disqualifyState.context ? (
+				<p className="mt-1.5 text-sm text-red-600">
+					{disqualifyState.context.errorReason}
+				</p>
+			) : null}
 			<div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
 				<form onSubmit={handleDisqualify}>
 					<button
