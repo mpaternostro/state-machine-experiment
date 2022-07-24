@@ -3,30 +3,46 @@ import { classNames } from "./lib/classNames";
 
 export default function App() {
 	const [disqualifyState, setDisqualifyState] = useState<{
-		status: "idle" | "submitting";
-		context?: { errorReason: string };
-	}>({
-		status: "idle",
-	});
+		status: "enabled" | "disabled";
+		context?: {
+			errorReason?: string;
+			submitting?: boolean;
+			disabledReason?: string;
+		};
+	}>(
+		new Date().getDay() === 0
+			? {
+					status: "disabled",
+					context: {
+						disabledReason: "Cannot disqualify on Sundays",
+					},
+			  }
+			: {
+					status: "enabled",
+			  },
+	);
 
 	// here everything is mixed up: form submission and business logic belongs to the same function
 	function handleDisqualify(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		// defensive programming, not ideal
-		if (disqualifyState.status === "submitting") {
+		if (disqualifyState.status === "disabled") {
 			return;
 		}
 
 		setDisqualifyState({
-			status: "submitting",
+			status: "disabled",
+			context: {
+				submitting: true,
+			},
 		});
 
 		// fake business logic
 		return new Promise((_resolve, reject) => {
 			setTimeout(() => {
 				setDisqualifyState({
-					status: "idle",
+					status: "enabled",
 					context: {
 						errorReason:
 							"Could not disqualify applicant. Please try again later.",
@@ -37,7 +53,7 @@ export default function App() {
 		});
 	}
 
-	const isDisqualifying = disqualifyState.status === "submitting";
+	const disableDisqualify = disqualifyState.status === "disabled";
 
 	return (
 		<main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:px-8">
@@ -70,9 +86,14 @@ export default function App() {
 					</p>
 				</div>
 			</div>
-			{disqualifyState.context ? (
+			{disqualifyState.context?.errorReason ? (
 				<p className="mt-1.5 text-sm text-red-600">
 					{disqualifyState.context.errorReason}
+				</p>
+			) : null}
+			{disqualifyState.context?.disabledReason ? (
+				<p className="mt-1.5 text-sm text-red-600">
+					{disqualifyState.context.disabledReason}
 				</p>
 			) : null}
 			<div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
@@ -81,13 +102,17 @@ export default function App() {
 						type="submit"
 						className={classNames(
 							"w-32 inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500",
-							isDisqualifying ? "opacity-50 cursor-not-allowed" : "",
+							disableDisqualify ? "opacity-50 cursor-not-allowed" : "",
 						)}
-						aria-disabled={isDisqualifying}
+						aria-disabled={disableDisqualify}
 					>
-						{isDisqualifying ? "Disqualifying..." : "Disqualify"}
+						{disqualifyState.context?.submitting
+							? "Disqualifying..."
+							: "Disqualify"}
 						<span aria-live="assertive" className="sr-only">
-							{isDisqualifying ? "Disqualifying, please wait..." : ""}
+							{disqualifyState.context?.submitting
+								? "Disqualifying, please wait..."
+								: ""}
 						</span>
 					</button>
 				</form>
