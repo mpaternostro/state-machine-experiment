@@ -27,6 +27,7 @@ module.exports = {
 			},
 		},
 	],
+	ignorePatterns: ["*.cjs"],
 	extends: [
 		"eslint:recommended",
 		"plugin:react/recommended",
