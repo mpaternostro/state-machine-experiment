@@ -1,4 +1,29 @@
+import { FormEvent } from "react";
+
 export default function App() {
+	// here everything is mixed up, form submission and business logic belongs to the same function
+	function handleDisqualify(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+
+		// fake business logic
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				console.log("disqualified");
+				resolve("Success");
+			}, 2000);
+		});
+	}
+
+	function handleAdvanceToOffer(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+
+		return new Promise((_resolve, reject) => {
+			setTimeout(() => {
+				reject("Could not advance to offer");
+			}, 2000);
+		});
+	}
+
 	return (
 		<main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:px-8">
 			<div className="flex items-start space-x-5">
@@ -31,18 +56,22 @@ export default function App() {
 				</div>
 			</div>
 			<div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-				<button
-					type="button"
-					className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-				>
-					Disqualify
-				</button>
-				<button
-					type="button"
-					className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-				>
-					Advance to offer
-				</button>
+				<form onSubmit={handleDisqualify}>
+					<button
+						type="submit"
+						className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+					>
+						Disqualify
+					</button>
+				</form>
+				<form onSubmit={handleAdvanceToOffer}>
+					<button
+						type="submit"
+						className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+					>
+						Advance to offer
+					</button>
+				</form>
 			</div>
 		</main>
 	);
