@@ -11,7 +11,7 @@ export default function App() {
 			success?: boolean;
 		};
 	}>(
-		new Date().getDay() === 0
+		new Date(Date.now()).getDay() === 0
 			? {
 					status: "disabled",
 					context: {
