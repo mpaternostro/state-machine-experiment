@@ -1,0 +1,78 @@
+// Vitest Snapshot v1
+
+exports[`App > matches snapshot 1`] = `
+<main
+  class="max-w-7xl mx-auto px-4 py-6 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:px-8"
+>
+  <div
+    class="flex items-start space-x-5"
+  >
+    <div
+      class="flex-shrink-0"
+    >
+      <div
+        class="relative"
+      >
+        <img
+          alt=""
+          class="h-16 w-16 rounded-full"
+          src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
+        />
+        <span
+          aria-hidden="true"
+          class="absolute inset-0 shadow-inner rounded-full"
+        />
+      </div>
+    </div>
+    <div
+      class="pt-1.5"
+    >
+      <h1
+        class="text-2xl font-bold text-gray-900"
+      >
+        Ricardo Cooper
+      </h1>
+      <p
+        class="text-sm font-medium text-gray-500"
+      >
+        Applied for
+         
+        <a
+          class="text-gray-900"
+          href="#"
+        >
+          Front End Developer
+        </a>
+         
+        on 
+        <time
+          datetime="2020-08-25"
+        >
+          August 25, 2020
+        </time>
+      </p>
+    </div>
+  </div>
+  <p
+    aria-live="assertive"
+    class="mt-1.5 text-sm hidden"
+  />
+  <div
+    class="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3"
+  >
+    <form>
+      <button
+        aria-disabled="false"
+        class="w-32 inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+        type="submit"
+      >
+        Disqualify
+        <span
+          aria-live="assertive"
+          class="sr-only"
+        />
+      </button>
+    </form>
+  </div>
+</main>
+`;

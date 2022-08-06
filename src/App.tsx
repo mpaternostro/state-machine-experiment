@@ -8,6 +8,7 @@ export default function App() {
 			errorReason?: string;
 			submitting?: boolean;
 			disabledReason?: string;
+			success?: boolean;
 		};
 	}>(
 		new Date().getDay() === 0
@@ -39,21 +40,34 @@ export default function App() {
 		});
 
 		// fake business logic
-		return new Promise((_resolve, reject) => {
+		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				setDisqualifyState({
-					status: "enabled",
-					context: {
-						errorReason:
-							"Could not disqualify applicant. Please try again later.",
-					},
-				});
-				reject("Could not disqualify applicant");
+				if (Math.random() > 0.5) {
+					setDisqualifyState({
+						status: "disabled",
+						context: {
+							success: true,
+						},
+					});
+					resolve("Success");
+				} else {
+					setDisqualifyState({
+						status: "enabled",
+						context: {
+							errorReason:
+								"Could not disqualify applicant. Please try again later.",
+						},
+					});
+					reject("Could not disqualify applicant");
+				}
 			}, 2000);
 		});
 	}
 
+	// disqualifyState variable shortcuts to make code clearer and avoid repeting these comparisons
 	const disableDisqualify = disqualifyState.status === "disabled";
+	const disqualifyError = disqualifyState.context?.errorReason;
+	const disqualifySuccess = disqualifyState.context?.success;
 
 	return (
 		<main className="max-w-7xl mx-auto px-4 py-6 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:px-8">
@@ -86,11 +100,17 @@ export default function App() {
 					</p>
 				</div>
 			</div>
-			{disqualifyState.context?.errorReason ? (
-				<p className="mt-1.5 text-sm text-red-600">
-					{disqualifyState.context.errorReason}
-				</p>
-			) : null}
+			<p
+				className={classNames(
+					"mt-1.5 text-sm",
+					disqualifyError ?? disqualifySuccess ? "" : "hidden",
+					disqualifyError ? "text-red-600" : "",
+					disqualifySuccess ? "text-green-700" : "",
+				)}
+				aria-live="assertive"
+			>
+				{disqualifyError ?? (disqualifySuccess ? "Success" : "")}
+			</p>
 			{disqualifyState.context?.disabledReason ? (
 				<p className="mt-1.5 text-sm text-red-600">
 					{disqualifyState.context.disabledReason}
